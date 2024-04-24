@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  nginx-vts-exporter:
+    container_name: nginx_exporter
+    image: artifactory.asredanesh.com/docker/sophos/nginx-vts-exporter
+    command:
+      - NGINX_HOST="http://nging/status/format/json"       
+    ports:        
+      - 9913:9913
+    restart: always
+
+networks:
+  nginx:
+    name: nginx
+    external: true
+  prometheus:
+    name: prometheus
+    external: true
+
+
+
+
+
+
+
+
+
+
+  # nginx-exporter:
+  #   image: artifactory.asredanesh.com/docker/nginx/nginx-prometheus-exporter
+  #   container_name: nginx_exporter
+  #   ports:
+  #     - 9113:9113
+  #   networks:
+  #     - nginx
+  #     - prometheus
+  #   #environment:
+  #   command:
+  #     - -nginx.scrape-uri=http://192.168.99.73:8888/metrics
+  #     #- -web.telemetry-path=/metrics
+  #     #- -nginx.scrape-uri=http://<nginx>:8080/stub_status
+      
+
+    

@@ -1,0 +1,19 @@
+version: '3.5'
+services:
+  haproxy-exporter:
+    image: artifactory.asredanesh.com/docker/quay.io/prometheus/node-exporter
+    container_name: haproxy_exporter02
+    ports:
+      - "9101:9101"
+    environment:
+      - --haproxy.scrape-uri="http://admin:123456@192.168.99.73:8404/metrics?stats;csv"
+    networks:
+      - prometheus
+      - haproxy
+networks:
+   prometheus:
+     name: prometheus
+     external: true
+   haproxy:
+     name: haproxy
+     external: true
