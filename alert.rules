@@ -1,0 +1,11 @@
+groups:
+- name: 'haproxy_alerts'
+  rules:
+  - alert: HaproxyHighHttp5xxErrorRateBackend
+    expr: sum without (code)(rate(haproxy_frontend_http_responses_total{code="5xx"}[5m]))
+    for: 1m
+    labels:
+      severity: 'critical'
+    annotations:
+      summary: HAProxy high HTTP 5xx error rate frontend (instance {{ $labels.instance }})
+      description: sum without (code)(rate(haproxy_frontend_http_responses_total{code="5xx"}[5m]))

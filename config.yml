@@ -1,0 +1,47 @@
+global:
+  resolve_timeout: 5s
+  slack_api_url: 'https://hooks.slack.com/services/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'
+
+route:
+  group_by: ['jobs']
+  group_wait: 10s
+  group_interval: 5m
+  repeat_interval: 3h
+  receiver: 'slack'
+
+receivers:
+- name: 'slack'
+  slack_configs:
+  - send_resolved: true
+    username: 'Alertmanager'  
+  - api_url: 'https://hooks.slack.com/services/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'
+  - channel: '#alertmanager'
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+
+route:
+  receiver: 'slack'
+  group_wait: 10s
+  group_interval: 5m
+  repeat_interval: 3h
+    #title: |-
+     #[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }} for {{ .CommonLabels.job }}
+     #{{- if gt (len .CommonLabels) (len .GroupLabels) -}}
+       #{{" "}}(
+       #{{- with .CommonLabels.Remove .GroupLabels.Names }}
+         #{{- range $index, $label := .SortedPairs -}}
+           #{{ if $index }}, {{ end }}
+           #{{- $label.Name }}="{{ $label.Value -}}"
+         #{{- end }}
+       #{{- end -}}
+       #)
+     #{{- end }}
+    #text: >-
+     #{{ range .Alerts -}}
+     #*Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+
+     #*Description:* {{ .Annotations.description }}
+
+     #*Details:*
+       #{{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+       #{{ end }}
+     #{{ end }}

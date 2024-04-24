@@ -1,0 +1,19 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  receiver: 'sms-receiver'
+
+receivers:
+  - name: 'sms-receiver'
+    webhook_configs:
+      - url: 'https://api.twilio.com/2010-04-01/Accounts/your_account_sid/Messages.json'
+        http_config:
+          basic_auth:
+            username: 'admin'
+            password: 'admin'
+        send_resolved: false
+        http_method: POST
+        headers:
+          Content-Type: 'application/x-www-form-urlencoded'
+        body: 'To=+1234567890&From=+0987654321&Body=Alert: {{ .CommonLabels.alertname }}\nDescription: {{ .CommonAnnotations.description }}\nStatus: {{ .CommonLabels.severity }}'

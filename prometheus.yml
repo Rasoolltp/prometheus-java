@@ -1,0 +1,75 @@
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'asredanesh-Monitoring'
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+
+rule_files:
+  - 'alert.rules'
+#  - 'alerts/*.yml'
+
+
+#alert
+alerting:
+  alertmanagers:
+    - scheme: http
+      static_configs:
+      - targets:
+        - "alertmanager:9093"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+
+#####################################################
+   - job_name: 'node-exporter'
+     scrape_interval: 15s
+     static_configs:
+       - targets: ['node-exporter:9100']
+####################################################
+   - job_name: 'nginx_exporter'
+     scrape_interval: 15s
+     static_configs:
+       - targets: ['192.168.99.73:9913']
+# #####################################################
+#    - job_name: 'mysql_exporter'
+#      scrape_interval: 15s
+#      static_configs:
+#        - targets: ['mysql_exporter:9104']
+  ####################################################
+   #- job_name: 'offffffffffff'
+     #scrape_interval: 15s
+     #static_configs:
+       #- targets: ['192.168.242.65:5555']
+# ####################################################
+   - job_name: 'haproxy_exporter'
+     scrape_interval: 15s
+     static_configs:
+       - targets: ['192.168.99.21:8404']
+     #labels:
+       #service: 'http://192.168.99.21:8404/stats;norefresh#kuber_backend'
+       #- service: 'card2iban_backend'
+       #- service: 'https'
+       #- service: 'powerbi-bk'
+       #- service: 'www-asredanesh'
+       #- service: 'bankette_backend'
+       #- service: 'charge-file-upload_backend'
+       #- service: 'fs_backend_web'
+#####################################################
+   - job_name: 'cadvisor'
+     scrape_interval: 5s
+     static_configs:
+       - targets: [192.168.99.73:8081]
+#####################################################
+   - job_name: 'spring-boot-app'
+     metrics_path: '/actuator/prometheus'
+     scrape_interval: 5s
+     static_configs:
+       - targets: ['192.168.99.73:8383']
+       
